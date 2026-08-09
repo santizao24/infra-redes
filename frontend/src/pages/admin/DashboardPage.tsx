@@ -1,24 +1,49 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { HardHat, CheckCircle, Clock, AlertTriangle, Ruler, Package, AlertCircle } from 'lucide-react';
+import { HardHat, CheckCircle, Clock, AlertTriangle, Ruler, Package, AlertCircle, Mail, Trash2 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
-import { dashboardApi } from '../../services/endpoints';
+import { dashboardApi, publicApi } from '../../services/endpoints';
 import type { DashboardData } from '../../types';
 import { StatCard } from '../../components/ui/StatCard';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { PageLoader } from '../../components/ui/Loading';
 import { OBRA_ESTADO_LABELS, OBRA_TIPO_LABELS, UNIDADE_LABELS } from '../../utils/labels';
+import toast from 'react-hot-toast';
+
+interface MensagemContacto {
+  id: string;
+  nome: string;
+  email: string;
+  telefone?: string;
+  assunto?: string;
+  mensagem: string;
+  createdAt: string;
+}
 
 const PIE_COLORS = ['#2563eb', '#10b981', '#f59e0b', '#8b5cf6', '#64748b'];
 
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
+  const [mensagens, setMensagens] = useState<MensagemContacto[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    dashboardApi.get().then((res) => setData(res.data)).finally(() => setLoading(false));
+    Promise.all([
+      dashboardApi.get().then((res) => setData(res.data)),
+      publicApi.getMensagens().then((res) => setMensagens(res.data)).catch(() => []),
+    ]).finally(() => setLoading(false));
   }, []);
+
+  const handleDeleteMensagem = async (id: string) => {
+    try {
+      await publicApi.deleteMensagem(id);
+      setMensagens((prev) => prev.filter((m) => m.id !== id));
+      toast.success('Mensagem eliminada com sucesso');
+    } catch {
+      toast.error('Erro ao eliminar mensagem');
+    }
+  };
 
   if (loading) return <PageLoader />;
   if (!data) return null;
@@ -65,10 +90,10 @@ export default function DashboardPage() {
                 cy="50%"
                 outerRadius={100}
                 dataKey="value"
-                label={({ name, value }) => `${name}: ${value}`}
+                label={({ name, value }) => `${name} (${value})`}
               >
-                {obrasPorTipo.map((_, i) => (
-                  <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                {obrasPorTipo.map((_, index) => (
+                  <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip />
@@ -79,18 +104,60 @@ export default function DashboardPage() {
 
       {evolucaoMetros.length > 0 && (
         <Card>
-          <h3 className="font-semibold text-slate-900 mb-4">Evolução dos metros executados</h3>
-          <ResponsiveContainer width="100%" height={300}>
+          <h3 className="font-semibold text-slate-900 mb-4">Evolução de metros executados</h3>
+          <ResponsiveContainer width="100%" height={280}>
             <LineChart data={evolucaoMetros}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis dataKey="mes" tick={{ fontSize: 11 }} />
+              <XAxis dataKey="mes" />
               <YAxis />
-              <Tooltip formatter={(v: number) => [`${v.toLocaleString()} m`, 'Metros']} />
-              <Line type="monotone" dataKey="metros" stroke="#2563eb" strokeWidth={2} dot={{ r: 4 }} />
+              <Tooltip />
+              <Line type="monotone" dataKey="metros" stroke="#2563eb" strokeWidth={2} />
             </LineChart>
           </ResponsiveContainer>
         </Card>
       )}
+
+      {/* Caixa de Entrada: Mensagens dos Clientes */}
+      <Card>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+            <Mail className="w-5 h-5 text-primary-600" />
+            Mensagens de Clientes Recebidas ({mensagens.length})
+          </h3>
+        </div>
+        {mensagens.length === 0 ? (
+          <p className="text-sm text-slate-500 py-4">Nenhuma mensagem recebida até ao momento.</p>
+        ) : (
+          <div className="space-y-4">
+            {mensagens.map((msg) => (
+              <div key={msg.id} className="p-4 rounded-xl border border-slate-200 bg-slate-50 relative group">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <span className="font-semibold text-slate-900">{msg.nome}</span>
+                    <span className="text-xs text-slate-500 ml-2">({msg.email}{msg.telefone ? ` • Tel: ${msg.telefone}` : ''})</span>
+                    {msg.assunto && <p className="text-xs font-medium text-primary-600 mt-0.5">Assunto: {msg.assunto}</p>}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs text-slate-400">
+                      {new Date(msg.createdAt).toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                    <button
+                      onClick={() => handleDeleteMensagem(msg.id)}
+                      className="text-slate-400 hover:text-red-600 transition-colors p-1"
+                      title="Eliminar mensagem"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+                <p className="text-sm text-slate-700 whitespace-pre-line leading-relaxed mt-2 bg-white p-3 rounded-lg border border-slate-100">
+                  {msg.mensagem}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+      </Card>
 
       {stockBaixo.length > 0 && (
         <Card>

@@ -43,4 +43,6 @@ export const dashboardApi = {
 export const publicApi = {
   getStats: () => api.get<SiteStats>('/public/stats'),
   sendContact: (data: Record<string, string>) => api.post('/public/contacto', data),
+  getMensagens: () => api.get('/public/mensagens'),
+  deleteMensagem: (id: string) => api.delete(`/public/mensagens/${id}`),
 };

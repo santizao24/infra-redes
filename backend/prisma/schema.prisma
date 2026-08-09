@@ -178,3 +178,14 @@ model SiteConfig {
   chave String @unique
   valor String
 }
+
+model MensagemContacto {
+  id        String   @id @default(cuid())
+  nome      String
+  email     String
+  telefone  String?
+  assunto   String?
+  mensagem  String
+  lida      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

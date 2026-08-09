@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import prisma from '../lib/prisma.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
+import { authenticate } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -21,9 +22,36 @@ router.post(
     if (!nome || !email || !mensagem) {
       return res.status(400).json({ error: 'Nome, email e mensagem são obrigatórios' });
     }
-    // Em produção, enviar email ou guardar na BD
-    console.log('📧 Contacto recebido:', { nome, email, telefone, assunto, mensagem });
+
+    const novaMensagem = await prisma.mensagemContacto.create({
+      data: { nome, email, telefone, assunto, mensagem },
+    });
+
+    console.log('📧 Contacto recebido e gravado:', novaMensagem);
     res.json({ message: 'Mensagem enviada com sucesso. Entraremos em contacto brevemente.' });
+  })
+);
+
+// Obter mensagens recebidas (apenas para utilizadores autenticados)
+router.get(
+  '/mensagens',
+  authenticate,
+  asyncHandler(async (_req, res) => {
+    const mensagens = await prisma.mensagemContacto.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+    res.json(mensagens);
+  })
+);
+
+// Marcar mensagem como lida / eliminar
+router.delete(
+  '/mensagens/:id',
+  authenticate,
+  asyncHandler(async (req, res) => {
+    const id = req.params.id as string;
+    await prisma.mensagemContacto.delete({ where: { id } });
+    res.json({ message: 'Mensagem eliminada com sucesso' });
   })
 );
 
