@@ -60,7 +60,7 @@ export default function ContactosPage() {
               </div>
 
               <div className="mt-8">
-                <MapPicker latitude={41.4905} longitude={-8.6137} onLocationChange={() => {}} height="250px" />
+                <MapPicker latitude={41.575829} longitude={-8.655021} onLocationChange={() => {}} height="250px" />
               </div>
             </div>
 
