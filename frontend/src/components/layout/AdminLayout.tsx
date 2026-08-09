@@ -47,7 +47,7 @@ export function AdminLayout() {
           {!collapsed && (
             <Link to="/dashboard" className="flex items-center gap-2">
               <Droplets className="w-6 h-6 text-primary-400" />
-              <span className="font-display font-bold">AquaRedes</span>
+              <span className="font-display font-bold">Tarefas Obedientes</span>
             </Link>
           )}
           <button

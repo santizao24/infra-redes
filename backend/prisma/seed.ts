@@ -246,7 +246,7 @@ async function main() {
   const admin = await prisma.user.create({
     data: {
       nome: 'Administrador',
-      email: 'admin@aquaredes.pt',
+      email: 'admin@tarefasobedientes.pt',
       password: adminPassword,
       role: 'ADMIN',
     },
@@ -255,7 +255,7 @@ async function main() {
   const gestor = await prisma.user.create({
     data: {
       nome: 'Gestor de Obras',
-      email: 'gestor@aquaredes.pt',
+      email: 'gestor@tarefasobedientes.pt',
       password: gestorPassword,
       role: 'GESTOR',
     },
@@ -340,8 +340,8 @@ async function main() {
   }
 
   console.log('✅ Seed concluído!');
-  console.log('   Admin: admin@aquaredes.pt / admin123');
-  console.log('   Gestor: gestor@aquaredes.pt / gestor123');
+  console.log('   Admin: admin@tarefasobedientes.pt / admin123');
+  console.log('   Gestor: gestor@tarefasobedientes.pt / gestor123');
 }
 
 main()

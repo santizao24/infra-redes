@@ -29,7 +29,7 @@ export default function EmpresaPage() {
               <h2 className="font-display text-2xl font-bold text-slate-900 mb-6">Quem Somos</h2>
               <div className="space-y-4 text-slate-600 leading-relaxed">
                 <p>
-                  A <strong>AquaRedes Infraestruturas</strong> é uma empresa portuguesa especializada na execução,
+                  A <strong>Tarefas Obedientes</strong> é uma empresa portuguesa especializada na execução,
                   instalação e manutenção de infraestruturas subterrâneas, nomeadamente redes de abastecimento de água,
                   redes de saneamento e redes de gás.
                 </p>

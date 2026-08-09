@@ -23,7 +23,7 @@ export function PublicHeader() {
               <Droplets className="w-5 h-5 text-white" />
             </div>
             <div>
-              <span className="font-display font-bold text-lg text-slate-900">AquaRedes</span>
+              <span className="font-display font-bold text-lg text-slate-900">Tarefas Obedientes</span>
               <span className="hidden sm:block text-xs text-slate-500 -mt-0.5">Infraestruturas</span>
             </div>
           </Link>
@@ -95,7 +95,7 @@ export function PublicFooter() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Droplets className="w-6 h-6 text-primary-400" />
-              <span className="font-display font-bold text-white text-lg">AquaRedes</span>
+              <span className="font-display font-bold text-white text-lg">Tarefas Obedientes</span>
             </div>
             <p className="text-sm leading-relaxed">
               Especialistas em redes de água, saneamento e gás. Soluções eficientes, seguras e de qualidade para infraestruturas subterrâneas.
@@ -122,15 +122,16 @@ export function PublicFooter() {
           <div>
             <h4 className="font-semibold text-white mb-4">Contactos</h4>
             <ul className="space-y-2 text-sm">
-              <li>Zona Industrial, Lote 12</li>
-              <li>3030-123 Coimbra</li>
+              <li>Rua do Monte, nº 71</li>
+              <li>Tamel Santa Leocádia</li>
+              <li>4750-704 Barcelos</li>
               <li>+351 239 123 456</li>
-              <li>geral@aquaredes.pt</li>
+              <li>geral@tarefasobedientes.pt</li>
             </ul>
           </div>
         </div>
         <div className="mt-10 pt-8 border-t border-slate-700 text-sm text-center text-slate-500">
-          &copy; {new Date().getFullYear()} AquaRedes Infraestruturas. Todos os direitos reservados.
+          &copy; {new Date().getFullYear()} Tarefas Obedientes. Todos os direitos reservados.
         </div>
       </div>
     </footer>

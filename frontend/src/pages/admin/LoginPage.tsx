@@ -21,8 +21,9 @@ export default function LoginPage() {
       await login(email, password);
       toast.success('Login efetuado com sucesso');
       navigate('/dashboard');
-    } catch {
-      toast.error('Email ou password incorretos');
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error || 'Erro ao efetuar login';
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -38,7 +39,7 @@ export default function LoginPage() {
         <div className="relative z-10 max-w-md">
           <div className="flex items-center gap-3 mb-8">
             <Droplets className="w-10 h-10 text-primary-400" />
-            <span className="font-display text-2xl font-bold text-white">AquaRedes</span>
+            <span className="font-display text-2xl font-bold text-white">Tarefas Obedientes</span>
           </div>
           <h2 className="text-3xl font-bold text-white">Área de Gestão</h2>
           <p className="mt-4 text-slate-400 leading-relaxed">
@@ -51,7 +52,7 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center gap-2 mb-8 justify-center">
             <Droplets className="w-8 h-8 text-primary-600" />
-            <span className="font-display text-xl font-bold">AquaRedes</span>
+            <span className="font-display text-xl font-bold">Tarefas Obedientes</span>
           </div>
 
           <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8">
@@ -65,7 +66,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@aquaredes.pt"
+                placeholder="admin@tarefasobedientes.pt"
               />
               <div className="relative">
                 <Input
@@ -91,8 +92,8 @@ export default function LoginPage() {
 
             <div className="mt-6 p-4 bg-slate-50 rounded-lg text-xs text-slate-500">
               <p className="font-medium text-slate-700 mb-1">Credenciais de demonstração:</p>
-              <p>Admin: admin@aquaredes.pt / admin123</p>
-              <p>Gestor: gestor@aquaredes.pt / gestor123</p>
+              <p>Admin: admin@tarefasobedientes.pt / admin123</p>
+              <p>Gestor: gestor@tarefasobedientes.pt / gestor123</p>
             </div>
           </div>
 

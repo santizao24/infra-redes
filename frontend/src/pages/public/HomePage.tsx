@@ -92,7 +92,7 @@ export default function HomePage() {
             <div>
               <h2 className="font-display text-3xl lg:text-4xl font-bold text-slate-900">Quem Somos</h2>
               <p className="mt-4 text-slate-600 leading-relaxed">
-                A AquaRedes Infraestruturas é uma empresa especializada na execução e manutenção de infraestruturas subterrâneas,
+                A Tarefas Obedientes é uma empresa especializada na execução e manutenção de infraestruturas subterrâneas,
                 com foco em redes de abastecimento de água, saneamento e gás. Com mais de duas décadas de experiência,
                 garantimos soluções técnicas de excelência para municípios, utilities e empresas.
               </p>

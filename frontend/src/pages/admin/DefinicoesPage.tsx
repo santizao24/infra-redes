@@ -42,7 +42,7 @@ export default function DefinicoesPage() {
         <div className="space-y-3 text-sm">
           <div className="flex justify-between py-2 border-b border-slate-100">
             <span className="text-slate-500">Aplicação</span>
-            <span className="font-medium text-slate-900">AquaRedes - Sistema de Gestão</span>
+            <span className="font-medium text-slate-900">Tarefas Obedientes - Sistema de Gestão</span>
           </div>
           <div className="flex justify-between py-2 border-b border-slate-100">
             <span className="text-slate-500">Versão</span>
@@ -75,11 +75,11 @@ export default function DefinicoesPage() {
         <div className="space-y-3 text-sm">
           <div className="flex justify-between py-2 border-b border-slate-100">
             <span className="text-slate-500">Empresa</span>
-            <span className="font-medium text-slate-900">AquaRedes Infraestruturas, Lda.</span>
+            <span className="font-medium text-slate-900">Tarefas Obedientes, Lda.</span>
           </div>
           <div className="flex justify-between py-2 border-b border-slate-100">
             <span className="text-slate-500">Morada</span>
-            <span className="font-medium text-slate-900">Zona Industrial, Lote 12, 3030-123 Coimbra</span>
+            <span className="font-medium text-slate-900">Rua do Monte, nº 71, 4750-704 Tamel Santa Leocádia</span>
           </div>
           <div className="flex justify-between py-2 border-b border-slate-100">
             <span className="text-slate-500">Telefone</span>
@@ -87,11 +87,11 @@ export default function DefinicoesPage() {
           </div>
           <div className="flex justify-between py-2 border-b border-slate-100">
             <span className="text-slate-500">Email</span>
-            <span className="font-medium text-slate-900">geral@aquaredes.pt</span>
+            <span className="font-medium text-slate-900">geral@tarefasobedientes.pt</span>
           </div>
           <div className="flex justify-between py-2">
             <span className="text-slate-500">Website</span>
-            <span className="font-medium text-primary-600">www.aquaredes.pt</span>
+            <span className="font-medium text-primary-600">www.tarefasobedientes.pt</span>
           </div>
         </div>
       </Card>
@@ -110,8 +110,8 @@ export default function DefinicoesPage() {
             <strong>Credenciais de acesso:</strong>
           </p>
           <ul className="text-sm text-amber-800 mt-1 list-disc list-inside">
-            <li>Admin: admin@aquaredes.pt / admin123</li>
-            <li>Gestor: gestor@aquaredes.pt / gestor123</li>
+            <li>Admin: admin@tarefasobedientes.pt / admin123</li>
+            <li>Gestor: gestor@tarefasobedientes.pt / gestor123</li>
           </ul>
         </div>
       </Card>
