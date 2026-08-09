@@ -8,7 +8,7 @@ const services = [
     desc: 'Execução, instalação e manutenção de redes de abastecimento de água. Desde ramais domiciliários até coletores principais, garantimos a distribuição eficiente e segura de água potável.',
     color: 'text-blue-600 bg-blue-50',
     gradient: 'from-blue-600 to-cyan-500',
-    image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=800',
   },
   {
     icon: Building2,
@@ -16,7 +16,7 @@ const services = [
     desc: 'Construção e manutenção de redes de saneamento, incluindo coletores, poços de visita e ligações domiciliárias. Soluções para a gestão eficiente de águas residuais.',
     color: 'text-emerald-600 bg-emerald-50',
     gradient: 'from-emerald-600 to-teal-500',
-    image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800',
   },
   {
     icon: Flame,
@@ -24,7 +24,7 @@ const services = [
     desc: 'Instalação e execução de redes de gás natural e propano. Cumprimento rigoroso das normas de segurança e certificação para redes de distribuição de gás.',
     color: 'text-amber-600 bg-amber-50',
     gradient: 'from-amber-600 to-orange-500',
-    image: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=800',
   },
   {
     icon: Wrench,
@@ -32,7 +32,7 @@ const services = [
     desc: 'Execução de infraestruturas subterrâneas e redes técnicas. Galerias técnicas, passagens de cabos e infraestruturas multi-serviços.',
     color: 'text-slate-600 bg-slate-100',
     gradient: 'from-slate-700 to-slate-500',
-    image: 'https://images.unsplash.com/photo-1541976590-713941681597?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800',
   },
   {
     icon: Construction,
@@ -40,7 +40,7 @@ const services = [
     desc: 'Reposição e requalificação de pavimentos após execução das redes. Trabalhos provisórios e definitivos em asfalto, betão, calçada e paralelos.',
     color: 'text-orange-600 bg-orange-50',
     gradient: 'from-orange-600 to-amber-500',
-    image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800',
   },
   {
     icon: ShieldCheck,
@@ -48,7 +48,7 @@ const services = [
     desc: 'Manutenção preventiva e corretiva em redes e infraestruturas existentes. Inspeções, reparações e intervenções de emergência.',
     color: 'text-indigo-600 bg-indigo-50',
     gradient: 'from-indigo-600 to-blue-500',
-    image: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800',
   },
 ];
 
