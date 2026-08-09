@@ -252,10 +252,28 @@ async function main() {
     },
   });
 
+  await prisma.user.create({
+    data: {
+      nome: 'Administrador (Alt)',
+      email: 'admin@aquaredes.pt',
+      password: adminPassword,
+      role: 'ADMIN',
+    },
+  });
+
   const gestor = await prisma.user.create({
     data: {
       nome: 'Gestor de Obras',
       email: 'gestor@tarefasobedientes.pt',
+      password: gestorPassword,
+      role: 'GESTOR',
+    },
+  });
+
+  await prisma.user.create({
+    data: {
+      nome: 'Gestor de Obras (Alt)',
+      email: 'gestor@aquaredes.pt',
       password: gestorPassword,
       role: 'GESTOR',
     },
