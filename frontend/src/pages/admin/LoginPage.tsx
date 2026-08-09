@@ -22,8 +22,9 @@ export default function LoginPage() {
       await login(cleanEmail, password.trim());
       toast.success('Login efetuado com sucesso');
       navigate('/dashboard');
-    } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error || 'Erro ao efetuar login';
+    } catch (err: any) {
+      console.error('Login error:', err);
+      const msg = err.response?.data?.error || err.message || 'Erro ao efetuar login';
       toast.error(msg);
     } finally {
       setLoading(false);
