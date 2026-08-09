@@ -1,4 +1,4 @@
-import { Settings, Info, Database, Shield, Globe } from 'lucide-react';
+import { Settings, Info, Shield, Globe } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { useAuth } from '../../context/AuthContext';
