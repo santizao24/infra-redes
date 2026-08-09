@@ -96,25 +96,7 @@ export default function DefinicoesPage() {
         </div>
       </Card>
 
-      {/* Notas */}
-      <Card>
-        <h2 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
-          <Database className="w-5 h-5 text-primary-600" /> Dados de demonstração
-        </h2>
-        <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-          <p className="text-sm text-amber-800">
-            Este sistema contém dados de demonstração. As obras, materiais e movimentos apresentados são fictícios
-            e servem apenas para demonstrar as funcionalidades do sistema.
-          </p>
-          <p className="text-sm text-amber-800 mt-2">
-            <strong>Credenciais de acesso:</strong>
-          </p>
-          <ul className="text-sm text-amber-800 mt-1 list-disc list-inside">
-            <li>Admin: admin@tarefasobedientes.pt / admin123</li>
-            <li>Gestor: gestor@tarefasobedientes.pt / gestor123</li>
-          </ul>
-        </div>
-      </Card>
+      {/* Card removido */}
     </div>
   );
 }

@@ -91,12 +91,6 @@ export default function LoginPage() {
                 Entrar
               </Button>
             </form>
-
-            <div className="mt-6 p-4 bg-slate-50 rounded-lg text-xs text-slate-500">
-              <p className="font-medium text-slate-700 mb-1">Credenciais de demonstração:</p>
-              <p>Admin: admin@tarefasobedientes.pt / admin123</p>
-              <p>Gestor: gestor@tarefasobedientes.pt / gestor123</p>
-            </div>
           </div>
 
           <p className="text-center mt-6 text-sm text-slate-500">
