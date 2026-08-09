@@ -68,7 +68,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@tarefasobedientes.pt"
+                placeholder="Email"
               />
               <div className="relative">
                 <Input
