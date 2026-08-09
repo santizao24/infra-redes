@@ -18,7 +18,8 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await login(email, password);
+      const cleanEmail = email.trim().toLowerCase();
+      await login(cleanEmail, password.trim());
       toast.success('Login efetuado com sucesso');
       navigate('/dashboard');
     } catch (err: unknown) {
