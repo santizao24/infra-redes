@@ -1,0 +1,180 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  GESTOR
+}
+
+enum ObraEstado {
+  PLANEADA
+  EM_PREPARACAO
+  EM_EXECUCAO
+  SUSPENSA
+  CONCLUIDA
+}
+
+enum ObraTipo {
+  AGUA
+  SANEAMENTO
+  GAS
+  AGUA_SANEAMENTO
+  OUTRA
+}
+
+enum TipoPavimento {
+  ASFALTO
+  BETAO
+  CALCADA
+  TERRA
+  PARALELOS
+  OUTRO
+}
+
+enum EstadoPavimento {
+  PROVISORIO
+  DEFINITIVO
+}
+
+enum MaterialCategoria {
+  TUBAGENS
+  ACESSORIOS
+  VALVULAS
+  MATERIAL_AGUA
+  MATERIAL_SANEAMENTO
+  MATERIAL_GAS
+  PAVIMENTACAO
+  OUTROS
+}
+
+enum UnidadeMedida {
+  UNIDADE
+  METRO
+  KG
+  LITRO
+  CAIXA
+}
+
+enum MovimentoTipo {
+  ENTRADA
+  SAIDA
+}
+
+model User {
+  id        String   @id @default(cuid())
+  nome      String
+  email     String   @unique
+  password  String
+  role      UserRole @default(GESTOR)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  movimentosStock MovimentoStock[]
+  historicoObras  HistoricoObra[]
+}
+
+model Obra {
+  id                    String           @id @default(cuid())
+  nome                  String
+  referencia            String           @unique
+  cliente               String
+  tipo                  ObraTipo
+  estado                ObraEstado       @default(PLANEADA)
+  responsavel           String
+  dataInicio            DateTime?
+  dataPrevistaFim       DateTime?
+  dataFim               DateTime?
+  latitude              Float?
+  longitude             Float?
+  morada                String?
+  metrosPrevistos       Float            @default(0)
+  metrosExecutados      Float            @default(0)
+  tipoPavimento         TipoPavimento?
+  estadoPavimento       EstadoPavimento?
+  areaPavimento         Float?
+  dataReposicaoProvisoria DateTime?
+  dataReposicaoDefinitiva DateTime?
+  observacoesPavimento  String?
+  descricao             String?
+  imagemUrl             String?
+  publica               Boolean          @default(true)
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+
+  movimentosStock MovimentoStock[]
+  historico       HistoricoObra[]
+  materiaisUsados MaterialObra[]
+}
+
+model Material {
+  id              String            @id @default(cuid())
+  codigo          String            @unique
+  nome            String
+  categoria       MaterialCategoria
+  descricao       String?
+  unidade         UnidadeMedida
+  quantidadeStock Float             @default(0)
+  stockMinimo     Float             @default(0)
+  localizacao     String?
+  fornecedor      String?
+  precoUnitario   Float             @default(0)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  movimentos MovimentoStock[]
+  obras      MaterialObra[]
+}
+
+model MaterialObra {
+  id         String   @id @default(cuid())
+  obraId     String
+  materialId String
+  quantidade Float
+  createdAt  DateTime @default(now())
+
+  obra     Obra     @relation(fields: [obraId], references: [id], onDelete: Cascade)
+  material Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+
+  @@unique([obraId, materialId])
+}
+
+model MovimentoStock {
+  id           String        @id @default(cuid())
+  materialId   String
+  obraId       String?
+  tipo         MovimentoTipo
+  quantidade   Float
+  data         DateTime      @default(now())
+  utilizadorId String
+  fornecedor   String?
+  responsavel  String?
+  observacoes  String?
+  createdAt    DateTime      @default(now())
+
+  material   Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  obra       Obra?    @relation(fields: [obraId], references: [id], onDelete: SetNull)
+  utilizador User     @relation(fields: [utilizadorId], references: [id])
+}
+
+model HistoricoObra {
+  id           String   @id @default(cuid())
+  obraId       String
+  utilizadorId String?
+  descricao    String
+  data         DateTime @default(now())
+
+  obra       Obra  @relation(fields: [obraId], references: [id], onDelete: Cascade)
+  utilizador User? @relation(fields: [utilizadorId], references: [id], onDelete: SetNull)
+}
+
+model SiteConfig {
+  id    String @id @default(cuid())
+  chave String @unique
+  valor String
+}

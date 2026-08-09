@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: infra-redes-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: infra_redes
+      POSTGRES_PASSWORD: infra_redes_dev
+      POSTGRES_DB: infra_redes
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
