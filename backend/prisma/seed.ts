@@ -4,11 +4,10 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 const obras: any[] = [];
-
 const materiais: any[] = [];
 
 async function main() {
-  console.log('🌱 A iniciar seed da base de dados (dados de demonstração)...');
+  console.log('🌱 A iniciar seed da base de dados...');
 
   await prisma.movimentoStock.deleteMany();
   await prisma.materialObra.deleteMany();
@@ -47,32 +46,10 @@ async function main() {
       data: {
         obraId: created.id,
         utilizadorId: admin.id,
-        descricao: 'Obra criada (dados de demonstração)',
+        descricao: 'Obra criada',
         data: obra.dataInicio || new Date(),
       },
     });
-
-    if (obra.estado === 'EM_EXECUCAO' && obra.metrosExecutados > 0) {
-      await prisma.historicoObra.create({
-        data: {
-          obraId: created.id,
-          utilizadorId: gestor.id,
-          descricao: `Início da execução — ${obra.metrosExecutados} m executados`,
-          data: obra.dataInicio || new Date(),
-        },
-      });
-    }
-
-    if (obra.estadoPavimento === 'PROVISORIO' && obra.dataReposicaoProvisoria) {
-      await prisma.historicoObra.create({
-        data: {
-          obraId: created.id,
-          utilizadorId: gestor.id,
-          descricao: 'Pavimento provisório realizado',
-          data: obra.dataReposicaoProvisoria,
-        },
-      });
-    }
   }
 
   const createdMateriais = [];
@@ -80,30 +57,6 @@ async function main() {
     const created = await prisma.material.create({ data: mat });
     createdMateriais.push(created);
   }
-
-  // Relacionar materiais com obras
-  await prisma.materialObra.createMany({
-    data: [
-      { obraId: createdObras[0].id, materialId: createdMateriais[0].id, quantidade: 500 },
-      { obraId: createdObras[0].id, materialId: createdMateriais[5].id, quantidade: 20 },
-      { obraId: createdObras[0].id, materialId: createdMateriais[8].id, quantidade: 15 },
-      { obraId: createdObras[1].id, materialId: createdMateriais[1].id, quantidade: 800 },
-      { obraId: createdObras[1].id, materialId: createdMateriais[13].id, quantidade: 12 },
-    ],
-  });
-
-  // Movimentos de stock de exemplo
-  await prisma.movimentoStock.create({
-    data: {
-      materialId: createdMateriais[0].id,
-      obraId: createdObras[0].id,
-      tipo: 'SAIDA',
-      quantidade: 500,
-      utilizadorId: gestor.id,
-      responsavel: 'João Silva',
-      observacoes: 'Saída para obra OBR-2026-001',
-    },
-  });
 
   const stats = [
     { chave: 'obras_realizadas', valor: '100+' },
@@ -116,9 +69,8 @@ async function main() {
     await prisma.siteConfig.create({ data: stat });
   }
 
-  console.log('✅ Seed concluído!');
+  console.log('✅ Seed concluído com sucesso!');
   console.log('   Admin: admin@tarefasobedientes.pt / admin123');
-  console.log('   Gestor: gestor@tarefasobedientes.pt / gestor123');
 }
 
 main()

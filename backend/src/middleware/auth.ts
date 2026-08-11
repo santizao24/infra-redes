@@ -16,6 +16,10 @@ declare global {
   }
 }
 
+if (process.env.NODE_ENV === 'production' && (!process.env.JWT_SECRET || process.env.JWT_SECRET === 'dev-secret')) {
+  console.error('🚨 ERRO CRÍTICO DE SEGURANÇA: JWT_SECRET não está definida ou é insegura em ambiente de produção!');
+}
+
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
 
 export function signToken(payload: AuthPayload): string {

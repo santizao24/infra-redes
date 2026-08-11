@@ -151,17 +151,17 @@ router.post(
   asyncHandler(async (req, res) => {
     const data = movimentoSchema.parse(req.body);
 
-    const material = await prisma.material.findUnique({ where: { id: data.materialId } });
-    if (!material) return res.status(404).json({ error: 'Material não encontrado' });
+    const movimento = await prisma.$transaction(async (tx) => {
+      const material = await tx.material.findUnique({ where: { id: data.materialId } });
+      if (!material) throw new Error('NOT_FOUND:Material não encontrado');
 
-    if (data.tipo === 'SAIDA' && material.quantidadeStock < data.quantidade) {
-      return res.status(400).json({ error: 'Stock insuficiente para esta saída' });
-    }
+      if (data.tipo === 'SAIDA' && material.quantidadeStock < data.quantidade) {
+        throw new Error('BAD_REQUEST:Stock insuficiente para esta saída');
+      }
 
-    const delta = data.tipo === 'ENTRADA' ? data.quantidade : -data.quantidade;
+      const delta = data.tipo === 'ENTRADA' ? data.quantidade : -data.quantidade;
 
-    const [movimento] = await prisma.$transaction([
-      prisma.movimentoStock.create({
+      const novoMovimento = await tx.movimentoStock.create({
         data: {
           materialId: data.materialId,
           tipo: data.tipo,
@@ -177,22 +177,37 @@ router.post(
           material: true,
           obra: { select: { id: true, nome: true } },
         },
-      }),
-      prisma.material.update({
+      });
+
+      await tx.material.update({
         where: { id: data.materialId },
         data: { quantidadeStock: { increment: delta } },
-      }),
-    ]);
-
-    if (data.tipo === 'SAIDA' && data.obraId) {
-      await prisma.materialObra.upsert({
-        where: { obraId_materialId: { obraId: data.obraId, materialId: data.materialId } },
-        update: { quantidade: { increment: data.quantidade } },
-        create: { obraId: data.obraId, materialId: data.materialId, quantidade: data.quantidade },
       });
-    }
 
-    res.status(201).json(movimento);
+      if (data.tipo === 'SAIDA' && data.obraId) {
+        await tx.materialObra.upsert({
+          where: { obraId_materialId: { obraId: data.obraId, materialId: data.materialId } },
+          update: { quantidade: { increment: data.quantidade } },
+          create: { obraId: data.obraId, materialId: data.materialId, quantidade: data.quantidade },
+        });
+      }
+
+      return novoMovimento;
+    }).catch((err) => {
+      if (err.message?.startsWith('NOT_FOUND:')) {
+        res.status(404).json({ error: err.message.replace('NOT_FOUND:', '') });
+        return null;
+      }
+      if (err.message?.startsWith('BAD_REQUEST:')) {
+        res.status(400).json({ error: err.message.replace('BAD_REQUEST:', '') });
+        return null;
+      }
+      throw err;
+    });
+
+    if (movimento) {
+      res.status(201).json(movimento);
+    }
   })
 );
 

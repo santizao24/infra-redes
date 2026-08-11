@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { z } from 'zod';
 import prisma from '../lib/prisma.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { authenticate } from '../middleware/auth.js';
@@ -15,19 +16,24 @@ router.get(
   })
 );
 
+const contactoSchema = z.object({
+  nome: z.string().trim().min(2, 'Nome muito curto').max(100, 'Nome muito longo'),
+  email: z.string().trim().toLowerCase().email('Email inválido'),
+  telefone: z.string().trim().max(30).optional().nullable(),
+  assunto: z.string().trim().max(150).optional().nullable(),
+  mensagem: z.string().trim().min(5, 'Mensagem muito curta').max(3000, 'Mensagem ultrapassa o limite de 3000 caracteres'),
+});
+
 router.post(
   '/contacto',
   asyncHandler(async (req, res) => {
-    const { nome, email, telefone, assunto, mensagem } = req.body;
-    if (!nome || !email || !mensagem) {
-      return res.status(400).json({ error: 'Nome, email e mensagem são obrigatórios' });
-    }
+    const data = contactoSchema.parse(req.body);
 
     const novaMensagem = await prisma.mensagemContacto.create({
-      data: { nome, email, telefone, assunto, mensagem },
+      data,
     });
 
-    console.log('📧 Contacto recebido e gravado:', novaMensagem);
+    console.log('📧 Contacto recebido e gravado:', novaMensagem.id);
     res.json({ message: 'Mensagem enviada com sucesso. Entraremos em contacto brevemente.' });
   })
 );
