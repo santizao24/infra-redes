@@ -72,8 +72,10 @@ export default function ObraFormPage() {
         toast.success('Obra criada com sucesso');
         navigate(`/gestao/obras/${res.data.id}`);
       }
-    } catch {
-      toast.error('Erro ao guardar obra');
+    } catch (err: any) {
+      console.error('Error saving/creating obra:', err);
+      const msg = err.response?.data?.error || err.message || 'Erro ao guardar obra';
+      toast.error(msg);
     } finally {
       setSaving(false);
     }
