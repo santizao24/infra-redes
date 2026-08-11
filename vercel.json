@@ -5,7 +5,7 @@
       "destination": "https://infra-redes.onrender.com/api/:path*"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ]

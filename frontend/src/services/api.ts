@@ -1,6 +1,14 @@
 import axios from 'axios';
 
-let baseURL = import.meta.env.VITE_API_URL || '/api';
+let baseURL = import.meta.env.VITE_API_URL || '';
+
+if (!baseURL) {
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    baseURL = 'https://infra-redes.onrender.com/api';
+  } else {
+    baseURL = '/api';
+  }
+}
 
 // Ensure baseURL always ends with /api if a custom URL is provided
 if (baseURL !== '/api' && !baseURL.endsWith('/api')) {
