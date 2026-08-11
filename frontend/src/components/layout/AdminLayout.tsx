@@ -5,6 +5,7 @@ import {
   Menu, X, Droplets, ChevronLeft,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { AlertsBellDropdown } from '../ui/AlertsBellDropdown';
 
 const navItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -103,6 +104,8 @@ export function AdminLayout() {
             <h1 className="text-lg font-semibold text-slate-900 hidden sm:block">Área de Gestão</h1>
           </div>
           <div className="flex items-center gap-3">
+            <AlertsBellDropdown />
+            <div className="h-6 w-px bg-slate-200 hidden sm:block" />
             <div className="text-right hidden sm:block">
               <p className="text-sm font-medium text-slate-900">{user?.nome}</p>
               <p className="text-xs text-slate-500">{user?.role === 'ADMIN' ? 'Administrador' : 'Gestor'}</p>

@@ -24,15 +24,26 @@ interface MensagemContacto {
 
 const PIE_COLORS = ['#2563eb', '#10b981', '#f59e0b', '#8b5cf6', '#64748b'];
 
+interface Alerta {
+  id: string;
+  tipo: 'OBRA_ATRASADA' | 'OBRA_PRAZO' | 'PAVIMENTO_PENDENTE' | 'STOCK_BAIXO' | 'MENSAGEM_NAO_LIDA';
+  nivel: 'CRITICO' | 'AVISO' | 'INFO';
+  titulo: string;
+  descricao: string;
+  link: string;
+}
+
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [mensagens, setMensagens] = useState<MensagemContacto[]>([]);
+  const [alertas, setAlertas] = useState<Alerta[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
       dashboardApi.get().then((res) => setData(res.data)),
       publicApi.getMensagens().then((res) => setMensagens(res.data)).catch(() => []),
+      dashboardApi.getAlertas().then((res) => setAlertas(res.data.alertas)).catch(() => []),
     ]).finally(() => setLoading(false));
   }, []);
 
@@ -77,6 +88,50 @@ export default function DashboardPage() {
         <StatCard title="Metros executados" value={`${resumo.totalMetrosExecutados.toLocaleString()} m`} icon={Ruler} color="bg-primary-100 text-primary-600" />
         <StatCard title="Stock baixo" value={resumo.materiaisStockBaixo} icon={AlertCircle} color="bg-red-100 text-red-600" subtitle={`de ${resumo.totalMateriais} materiais`} />
       </div>
+
+      {/* Central de Alertas Prioritários */}
+      {alertas.length > 0 && (
+        <Card className="border-l-4 border-l-amber-500">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-amber-500" />
+              Alertas Prioritários e Prazos ({alertas.length})
+            </h3>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {alertas.slice(0, 6).map((a) => (
+              <Link
+                key={a.id}
+                to={a.link}
+                className={`p-3 rounded-xl border transition-all hover:shadow-md flex flex-col justify-between ${
+                  a.nivel === 'CRITICO'
+                    ? 'border-red-200 bg-red-50/50 hover:border-red-300'
+                    : a.nivel === 'AVISO'
+                    ? 'border-amber-200 bg-amber-50/50 hover:border-amber-300'
+                    : 'border-blue-200 bg-blue-50/50 hover:border-blue-300'
+                }`}
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <Badge className={
+                      a.nivel === 'CRITICO'
+                        ? 'bg-red-100 text-red-700'
+                        : a.nivel === 'AVISO'
+                        ? 'bg-amber-100 text-amber-700'
+                        : 'bg-blue-100 text-blue-700'
+                    }>
+                      {a.nivel === 'CRITICO' ? 'Crítico' : a.nivel === 'AVISO' ? 'Aviso' : 'Info'}
+                    </Badge>
+                  </div>
+                  <h4 className="font-semibold text-slate-900 text-sm">{a.titulo}</h4>
+                  <p className="text-xs text-slate-600 mt-1 leading-relaxed">{a.descricao}</p>
+                </div>
+                <span className="text-xs font-medium text-primary-600 mt-3 hover:underline">Resolver / Ver detalhes →</span>
+              </Link>
+            ))}
+          </div>
+        </Card>
+      )}
 
       <div className="grid lg:grid-cols-2 gap-6">
         <Card>

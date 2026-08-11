@@ -40,6 +40,19 @@ export const stockApi = {
 export const dashboardApi = {
   get: () => api.get<DashboardData>('/dashboard'),
   getRelatorios: () => api.get('/dashboard/relatorios'),
+  getAlertas: () => api.get<{
+    totalCount: number;
+    criticosCount: number;
+    alertas: Array<{
+      id: string;
+      tipo: 'OBRA_ATRASADA' | 'OBRA_PRAZO' | 'PAVIMENTO_PENDENTE' | 'STOCK_BAIXO' | 'MENSAGEM_NAO_LIDA';
+      nivel: 'CRITICO' | 'AVISO' | 'INFO';
+      titulo: string;
+      descricao: string;
+      link: string;
+      data?: string;
+    }>;
+  }>('/dashboard/alertas'),
 };
 
 export const publicApi = {
