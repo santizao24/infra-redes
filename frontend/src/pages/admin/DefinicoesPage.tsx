@@ -6,6 +6,7 @@ import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { useAuth } from '../../context/AuthContext';
 import { authApi } from '../../services/endpoints';
+import { EMPRESA } from '../../config';
 import toast from 'react-hot-toast';
 
 export default function DefinicoesPage() {
@@ -133,23 +134,23 @@ export default function DefinicoesPage() {
         <div className="space-y-3 text-sm">
           <div className="flex justify-between py-2 border-b border-slate-100">
             <span className="text-slate-500">Empresa</span>
-            <span className="font-medium text-slate-900">Tarefas Obedientes, Lda.</span>
+            <span className="font-medium text-slate-900">{EMPRESA.nome}</span>
           </div>
           <div className="flex justify-between py-2 border-b border-slate-100">
             <span className="text-slate-500">Morada</span>
-            <span className="font-medium text-slate-900">Rua do Monte, nº 71, 4750-704 Tamel Santa Leocádia</span>
+            <span className="font-medium text-slate-900">{EMPRESA.morada}</span>
           </div>
           <div className="flex justify-between py-2 border-b border-slate-100">
             <span className="text-slate-500">Telefone</span>
-            <span className="font-medium text-slate-900">+351 239 123 456</span>
+            <span className="font-medium text-slate-900">{EMPRESA.telefone}</span>
           </div>
           <div className="flex justify-between py-2 border-b border-slate-100">
             <span className="text-slate-500">Email</span>
-            <span className="font-medium text-slate-900">geral@tarefasobedientes.pt</span>
+            <span className="font-medium text-slate-900">{EMPRESA.email}</span>
           </div>
           <div className="flex justify-between py-2">
             <span className="text-slate-500">Website</span>
-            <span className="font-medium text-primary-600">www.tarefasobedientes.pt</span>
+            <span className="font-medium text-primary-600">{EMPRESA.website}</span>
           </div>
         </div>
       </Card>

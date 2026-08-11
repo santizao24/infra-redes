@@ -193,8 +193,34 @@ router.delete(
   authenticate,
   requireRole('ADMIN'),
   asyncHandler(async (req, res) => {
-    await prisma.obra.delete({ where: { id: req.params.id as string } });
-    res.json({ message: 'Obra eliminada' });
+    const obraId = req.params.id as string;
+
+    // Repor stock dos movimentos de SAIDA associados a esta obra
+    const movimentosSaida = await prisma.movimentoStock.findMany({
+      where: { obraId, tipo: 'SAIDA' },
+    });
+
+    if (movimentosSaida.length > 0) {
+      await prisma.$transaction(async (tx) => {
+        for (const mov of movimentosSaida) {
+          await tx.material.update({
+            where: { id: mov.materialId },
+            data: { quantidadeStock: { increment: mov.quantidade } },
+          });
+        }
+        // Limpar movimentos, materiais associados, histórico, e a obra
+        await tx.movimentoStock.deleteMany({ where: { obraId } });
+        await tx.materialObra.deleteMany({ where: { obraId } });
+        await tx.historicoObra.deleteMany({ where: { obraId } });
+        await tx.obra.delete({ where: { id: obraId } });
+      });
+    } else {
+      await prisma.materialObra.deleteMany({ where: { obraId } });
+      await prisma.historicoObra.deleteMany({ where: { obraId } });
+      await prisma.obra.delete({ where: { id: obraId } });
+    }
+
+    res.json({ message: 'Obra eliminada e stock reposto' });
   })
 );
 

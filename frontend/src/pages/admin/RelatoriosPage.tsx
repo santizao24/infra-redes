@@ -6,7 +6,8 @@ import { OBRA_ESTADO_LABELS, OBRA_TIPO_LABELS, formatDate } from '../../utils/la
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { PageLoader } from '../../components/ui/Loading';
-import { BarChart3, HardHat, Package, ArrowDownCircle, ArrowUpCircle } from 'lucide-react';
+import { BarChart3, HardHat, Package, ArrowDownCircle, ArrowUpCircle, Download, Printer } from 'lucide-react';
+import { Button } from '../../components/ui/Button';
 
 const CHART_COLORS = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#64748b'];
 
@@ -23,6 +24,33 @@ export default function RelatoriosPage() {
   useEffect(() => {
     dashboardApi.getRelatorios().then((res) => setData(res.data)).finally(() => setLoading(false));
   }, []);
+
+  const exportCSV = () => {
+    if (!data) return;
+    const headers = ['Obra', 'Referência', 'Cliente', 'Tipo', 'Estado', 'Metros Previstos', 'Metros Executados'];
+    const rows = data.obras.map((o) => [
+      `"${o.nome.replace(/"/g, '""')}"`,
+      `"${o.referencia}"`,
+      `"${o.cliente.replace(/"/g, '""')}"`,
+      `"${OBRA_TIPO_LABELS[o.tipo] || o.tipo}"`,
+      `"${OBRA_ESTADO_LABELS[o.estado] || o.estado}"`,
+      o.metrosPrevistos,
+      o.metrosExecutados,
+    ]);
+
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `relatorio_obras_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
 
   if (loading) return <PageLoader />;
   if (!data) return null;
@@ -46,11 +74,21 @@ export default function RelatoriosPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-          <BarChart3 className="w-6 h-6 text-primary-600" /> Relatórios
-        </h1>
-        <p className="text-sm text-slate-500">Visão geral de obras, stock e movimentos</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <BarChart3 className="w-6 h-6 text-primary-600" /> Relatórios
+          </h1>
+          <p className="text-sm text-slate-500">Visão geral de obras, stock e movimentos</p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="secondary" size="sm" onClick={exportCSV} className="gap-2">
+            <Download className="w-4 h-4" /> Exportar CSV
+          </Button>
+          <Button variant="ghost" size="sm" onClick={handlePrint} className="gap-2">
+            <Printer className="w-4 h-4" /> Imprimir / PDF
+          </Button>
+        </div>
       </div>
 
       {/* Resumo geral */}

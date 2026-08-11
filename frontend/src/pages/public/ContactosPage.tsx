@@ -6,6 +6,7 @@ import { Textarea } from '../../components/ui/Textarea';
 import { Button } from '../../components/ui/Button';
 import { MapPicker } from '../../components/map/MapComponents';
 import { publicApi } from '../../services/endpoints';
+import { EMPRESA } from '../../config';
 import toast from 'react-hot-toast';
 
 export default function ContactosPage() {
@@ -42,9 +43,9 @@ export default function ContactosPage() {
               <h2 className="font-display text-2xl font-bold text-slate-900 mb-6">Fale Connosco</h2>
               <div className="space-y-5">
                 {[
-                  { icon: MapPin, label: 'Morada', value: 'Rua do Monte, nº 71\nTamel Santa Leocádia\n4750-704 Barcelos' },
-                  { icon: Phone, label: 'Telefone', value: '+351 239 123 456' },
-                  { icon: Mail, label: 'Email', value: 'geral@tarefasobedientes.pt' },
+                  { icon: MapPin, label: 'Morada', value: EMPRESA.morada },
+                  { icon: Phone, label: 'Telefone', value: EMPRESA.telefone },
+                  { icon: Mail, label: 'Email', value: EMPRESA.email },
                   { icon: Clock, label: 'Horário', value: 'Segunda a Sexta: 08:00 - 18:00\nSábado: 09:00 - 13:00' },
                 ].map((c) => (
                   <div key={c.label} className="flex gap-4">

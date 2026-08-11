@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Menu, X, Droplets } from 'lucide-react';
 import { Button } from '../ui/Button';
+import { EMPRESA } from '../../config';
 
 const navLinks = [
   { to: '/', label: 'Início' },
@@ -122,11 +123,9 @@ export function PublicFooter() {
           <div>
             <h4 className="font-semibold text-white mb-4">Contactos</h4>
             <ul className="space-y-2 text-sm">
-              <li>Rua do Monte, nº 71</li>
-              <li>Tamel Santa Leocádia</li>
-              <li>4750-704 Barcelos</li>
-              <li>+351 239 123 456</li>
-              <li>geral@tarefasobedientes.pt</li>
+              <li className="whitespace-pre-line">{EMPRESA.morada}</li>
+              <li>{EMPRESA.telefone}</li>
+              <li>{EMPRESA.email}</li>
             </ul>
           </div>
         </div>
