@@ -9,6 +9,8 @@ export const authApi = {
   createUser: (data: { nome: string; email: string; password: string; role: string }) =>
     api.post<User>('/auth/users', data),
   deleteUser: (id: string) => api.delete(`/auth/users/${id}`),
+  changePassword: (passwordAtual: string, novaPassword: string) =>
+    api.put('/auth/password', { passwordAtual, novaPassword }),
 };
 
 export const obrasApi = {
@@ -44,5 +46,6 @@ export const publicApi = {
   getStats: () => api.get<SiteStats>('/public/stats'),
   sendContact: (data: Record<string, string>) => api.post('/public/contacto', data),
   getMensagens: () => api.get('/public/mensagens'),
+  toggleLida: (id: string) => api.patch(`/public/mensagens/${id}`),
   deleteMensagem: (id: string) => api.delete(`/public/mensagens/${id}`),
 };

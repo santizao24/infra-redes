@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { HardHat, CheckCircle, Clock, AlertTriangle, Ruler, Package, AlertCircle, Mail, Trash2 } from 'lucide-react';
+import { HardHat, CheckCircle, Clock, AlertTriangle, Ruler, Package, AlertCircle, Mail, Trash2, Eye, EyeOff } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { dashboardApi, publicApi } from '../../services/endpoints';
 import type { DashboardData } from '../../types';
@@ -18,6 +18,7 @@ interface MensagemContacto {
   telefone?: string;
   assunto?: string;
   mensagem: string;
+  lida: boolean;
   createdAt: string;
 }
 
@@ -35,6 +36,15 @@ export default function DashboardPage() {
     ]).finally(() => setLoading(false));
   }, []);
 
+  const handleToggleLida = async (id: string) => {
+    try {
+      const res = await publicApi.toggleLida(id);
+      setMensagens((prev) => prev.map((m) => m.id === id ? { ...m, lida: res.data.lida } : m));
+    } catch {
+      toast.error('Erro ao atualizar mensagem');
+    }
+  };
+
   const handleDeleteMensagem = async (id: string) => {
     try {
       await publicApi.deleteMensagem(id);
@@ -44,6 +54,8 @@ export default function DashboardPage() {
       toast.error('Erro ao eliminar mensagem');
     }
   };
+
+  const naoLidas = mensagens.filter((m) => !m.lida).length;
 
   if (loading) return <PageLoader />;
   if (!data) return null;
@@ -122,7 +134,9 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-slate-900 flex items-center gap-2">
             <Mail className="w-5 h-5 text-primary-600" />
-            Mensagens de Clientes Recebidas ({mensagens.length})
+            Mensagens de Clientes
+            {naoLidas > 0 && <Badge className="bg-red-100 text-red-700">{naoLidas} nova{naoLidas > 1 ? 's' : ''}</Badge>}
+            <span className="text-xs text-slate-400 font-normal">({mensagens.length} total)</span>
           </h3>
         </div>
         {mensagens.length === 0 ? (
@@ -130,17 +144,29 @@ export default function DashboardPage() {
         ) : (
           <div className="space-y-4">
             {mensagens.map((msg) => (
-              <div key={msg.id} className="p-4 rounded-xl border border-slate-200 bg-slate-50 relative group">
+              <div key={msg.id} className={`p-4 rounded-xl border relative group transition-colors ${
+                msg.lida ? 'border-slate-200 bg-slate-50' : 'border-primary-200 bg-primary-50/30'
+              }`}>
                 <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <span className="font-semibold text-slate-900">{msg.nome}</span>
-                    <span className="text-xs text-slate-500 ml-2">({msg.email}{msg.telefone ? ` • Tel: ${msg.telefone}` : ''})</span>
-                    {msg.assunto && <p className="text-xs font-medium text-primary-600 mt-0.5">Assunto: {msg.assunto}</p>}
+                  <div className="flex items-start gap-2">
+                    {!msg.lida && <span className="mt-1.5 w-2 h-2 rounded-full bg-primary-600 shrink-0" title="Não lida" />}
+                    <div>
+                      <span className={`${msg.lida ? 'font-medium' : 'font-bold'} text-slate-900`}>{msg.nome}</span>
+                      <span className="text-xs text-slate-500 ml-2">({msg.email}{msg.telefone ? ` • Tel: ${msg.telefone}` : ''})</span>
+                      {msg.assunto && <p className="text-xs font-medium text-primary-600 mt-0.5">Assunto: {msg.assunto}</p>}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     <span className="text-xs text-slate-400">
                       {new Date(msg.createdAt).toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </span>
+                    <button
+                      onClick={() => handleToggleLida(msg.id)}
+                      className="text-slate-400 hover:text-primary-600 transition-colors p-1"
+                      title={msg.lida ? 'Marcar como não lida' : 'Marcar como lida'}
+                    >
+                      {msg.lida ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
                     <button
                       onClick={() => handleDeleteMensagem(msg.id)}
                       className="text-slate-400 hover:text-red-600 transition-colors p-1"

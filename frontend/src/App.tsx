@@ -22,6 +22,7 @@ import StockMovimentosPage from './pages/admin/StockMovimentosPage';
 import RelatoriosPage from './pages/admin/RelatoriosPage';
 import UtilizadoresPage from './pages/admin/UtilizadoresPage';
 import DefinicoesPage from './pages/admin/DefinicoesPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 function PublicLayout() {
   return (
@@ -69,6 +70,9 @@ export default function App() {
         <Route path="/obras" element={<ObrasPublicPage />} />
         <Route path="/contactos" element={<ContactosPage />} />
       </Route>
+
+      {/* 404 */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

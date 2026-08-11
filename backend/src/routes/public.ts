@@ -50,7 +50,23 @@ router.get(
   })
 );
 
-// Marcar mensagem como lida / eliminar
+// Marcar mensagem como lida/não lida
+router.patch(
+  '/mensagens/:id',
+  authenticate,
+  asyncHandler(async (req, res) => {
+    const id = req.params.id as string;
+    const msg = await prisma.mensagemContacto.findUnique({ where: { id } });
+    if (!msg) return res.status(404).json({ error: 'Mensagem não encontrada' });
+    const updated = await prisma.mensagemContacto.update({
+      where: { id },
+      data: { lida: !msg.lida },
+    });
+    res.json(updated);
+  })
+);
+
+// Eliminar mensagem
 router.delete(
   '/mensagens/:id',
   authenticate,

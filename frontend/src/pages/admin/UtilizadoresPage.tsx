@@ -14,7 +14,7 @@ import { useAuth } from '../../context/AuthContext';
 import { formatDate } from '../../utils/labels';
 import toast from 'react-hot-toast';
 
-const defaultForm = { nome: '', email: '', password: '', role: 'GESTOR' };
+const defaultForm = { nome: '', email: '', password: '', role: 'ADMIN' };
 
 export default function UtilizadoresPage() {
   const { user: currentUser } = useAuth();
@@ -136,7 +136,6 @@ export default function UtilizadoresPage() {
           <Select
             label="Nível de acesso"
             options={[
-              { value: 'GESTOR', label: 'Gestor' },
               { value: 'ADMIN', label: 'Administrador' },
             ]}
             value={form.role}

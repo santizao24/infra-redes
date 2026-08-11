@@ -94,5 +94,33 @@ router.delete(
     res.json({ message: 'Utilizador eliminado' });
   })
 );
+const changePasswordSchema = z.object({
+  passwordAtual: z.string().min(1, 'Password atual é obrigatória'),
+  novaPassword: z.string().min(6, 'A nova password deve ter pelo menos 6 caracteres'),
+});
+
+router.put(
+  '/password',
+  authenticate,
+  asyncHandler(async (req, res) => {
+    const { passwordAtual, novaPassword } = changePasswordSchema.parse(req.body);
+
+    const user = await prisma.user.findUnique({ where: { id: req.user!.userId } });
+    if (!user) return res.status(404).json({ error: 'Utilizador não encontrado' });
+
+    const passwordCorreta = await bcrypt.compare(passwordAtual, user.password);
+    if (!passwordCorreta) {
+      return res.status(400).json({ error: 'A password atual está incorreta' });
+    }
+
+    const hashed = await bcrypt.hash(novaPassword, 10);
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { password: hashed },
+    });
+
+    res.json({ message: 'Password alterada com sucesso' });
+  })
+);
 
 export default router;

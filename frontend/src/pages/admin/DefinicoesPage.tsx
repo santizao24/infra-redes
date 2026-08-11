@@ -1,10 +1,37 @@
-import { Settings, Info, Shield, Globe } from 'lucide-react';
+import { useState } from 'react';
+import { Settings, Info, Shield, Globe, Lock } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
+import { Input } from '../../components/ui/Input';
+import { Button } from '../../components/ui/Button';
 import { useAuth } from '../../context/AuthContext';
+import { authApi } from '../../services/endpoints';
+import toast from 'react-hot-toast';
 
 export default function DefinicoesPage() {
   const { user } = useAuth();
+  const [pwForm, setPwForm] = useState({ passwordAtual: '', novaPassword: '', confirmar: '' });
+  const [saving, setSaving] = useState(false);
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (pwForm.novaPassword.length < 6) {
+      return toast.error('A nova password deve ter pelo menos 6 caracteres');
+    }
+    if (pwForm.novaPassword !== pwForm.confirmar) {
+      return toast.error('As passwords não coincidem');
+    }
+    setSaving(true);
+    try {
+      await authApi.changePassword(pwForm.passwordAtual, pwForm.novaPassword);
+      toast.success('Password alterada com sucesso');
+      setPwForm({ passwordAtual: '', novaPassword: '', confirmar: '' });
+    } catch (err: any) {
+      toast.error(err.response?.data?.error || 'Erro ao alterar password');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="space-y-6 max-w-4xl">
@@ -32,6 +59,37 @@ export default function DefinicoesPage() {
             </Badge>
           </div>
         </div>
+      </Card>
+
+      {/* Alterar Password */}
+      <Card>
+        <h2 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+          <Lock className="w-5 h-5 text-primary-600" /> Alterar password
+        </h2>
+        <form onSubmit={handleChangePassword} className="space-y-4 max-w-md">
+          <Input
+            label="Password atual"
+            type="password"
+            required
+            value={pwForm.passwordAtual}
+            onChange={(e) => setPwForm({ ...pwForm, passwordAtual: e.target.value })}
+          />
+          <Input
+            label="Nova password"
+            type="password"
+            required
+            value={pwForm.novaPassword}
+            onChange={(e) => setPwForm({ ...pwForm, novaPassword: e.target.value })}
+          />
+          <Input
+            label="Confirmar nova password"
+            type="password"
+            required
+            value={pwForm.confirmar}
+            onChange={(e) => setPwForm({ ...pwForm, confirmar: e.target.value })}
+          />
+          <Button type="submit" loading={saving}>Alterar password</Button>
+        </form>
       </Card>
 
       {/* Informação do sistema */}
@@ -95,8 +153,6 @@ export default function DefinicoesPage() {
           </div>
         </div>
       </Card>
-
-      {/* Card removido */}
     </div>
   );
 }
